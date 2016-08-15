@@ -52,7 +52,7 @@ class Module extends \yii\base\Module
      * @var array server options
      */
     public $options = [];
-    
+
     /**
      * @var string name of access token parameter
      */
