@@ -25,4 +25,13 @@ class RestController extends \yii\rest\Controller
         $response = $this->module->getServer()->handleTokenRequest();
         return $response->getParameters();
     }
+    
+    public function actionRevoke()
+    {
+        $server = $this->module->getServer();
+        $request = $this->module->getRequest();
+        $response = $server->handleRevokeRequest($request);
+        
+        return $response->getParameters();
+    }
 }
