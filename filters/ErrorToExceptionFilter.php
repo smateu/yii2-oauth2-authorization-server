@@ -40,6 +40,18 @@ class ErrorToExceptionFilter extends \yii\base\Behavior
         $message = Module::t('common', $response->getParameter('error_description'));
         if($message === null) {
             $message = Module::t('common', 'An internal server error occurred.');
+        $response = Yii::$app->getModule('oauth2')->getServer()->getResponse();
+        $optional = $event->action->controller->getBehavior('authenticator')->optional;
+        $currentAction = $event->action->id;
+        $isValid = true;
+        if (!in_array($currentAction, $optional)) {
+            if ($response !== null) {
+                $isValid = $response->isInformational() || $response->isSuccessful() || $response->isRedirection();
+            }
+            if (!$isValid) {
+                throw new HttpException($response->getStatusCode(), $this->getErrorMessage($response),
+                    $response->getParameter('error_uri'));
+            }
         }
         return $message;
     }

@@ -1,11 +1,8 @@
 <?php
-
 namespace filsh\yii2\oauth2server;
-
 use \Yii;
 use yii\i18n\PhpMessageSource;
 use  \array_key_exists;
-
 /**
  * For example,
  * 
@@ -49,11 +46,6 @@ class Module extends \yii\base\Module
     public $grantTypes = [];
     
     /**
-     * @var array server options
-     */
-    public $options = [];
-
-    /**
      * @var string name of access token parameter
      */
     public $tokenParamName;
@@ -96,7 +88,6 @@ class Module extends \yii\base\Module
                 \Yii::$container->clear('public_key'); //remove old definition
                 \Yii::$container->set('public_key', $this->storageMap['public_key']);
                 \Yii::$container->set('OAuth2\Storage\PublicKeyInterface', $this->storageMap['public_key']);
-
                 \Yii::$container->clear('access_token'); //remove old definition
                 \Yii::$container->set('access_token', $this->storageMap['access_token']);
             }
@@ -110,13 +101,10 @@ class Module extends \yii\base\Module
                 if(!isset($storages[$name]) || empty($options['class'])) {
                     throw new \yii\base\InvalidConfigException('Invalid grant types configuration.');
                 }
-
                 $class = $options['class'];
                 unset($options['class']);
-
                 $reflection = new \ReflectionClass($class);
                 $config = array_merge([0 => $storages[$name]], [$options]);
-
                 $instance = $reflection->newInstanceArgs($config);
                 $grantTypes[$name] = $instance;
             }
@@ -124,15 +112,14 @@ class Module extends \yii\base\Module
             $server = \Yii::$container->get(Server::className(), [
                 $this,
                 $storages,
-                array_merge(array_filter([
+                [
                     'use_jwt_access_tokens' => $this->useJwtToken,//ADDED
                     'token_param_name' => $this->tokenParamName,
                     'access_lifetime' => $this->tokenAccessLifetime,
                     /** add more ... */
-                ]), $this->options),
+                ],
                 $grantTypes
             ]);
-
             $this->set('server', $server);
         }
         return $this->get('server');
@@ -153,7 +140,6 @@ class Module extends \yii\base\Module
         }
         return $this->get('response');
     }
-
     /**
      * Register translations for this module
      * 
