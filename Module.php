@@ -3,9 +3,10 @@ namespace filsh\yii2\oauth2server;
 use \Yii;
 use yii\i18n\PhpMessageSource;
 use  \array_key_exists;
+use yii\helpers\ArrayHelper;
 /**
  * For example,
- * 
+ *
  * ```php
  * 'oauth2' => [
  *     'class' => 'filsh\yii2\oauth2server\Module',
@@ -29,27 +30,22 @@ use  \array_key_exists;
 class Module extends \yii\base\Module
 {
     const VERSION = '2.0.0';
-    
     /**
      * @var array Model's map
      */
     public $modelMap = [];
-    
     /**
      * @var array Storage's map
      */
     public $storageMap = [];
-    
     /**
      * @var array GrantTypes collection
      */
     public $grantTypes = [];
-    
     /**
      * @var string name of access token parameter
      */
     public $tokenParamName;
-    
     /**
      * @var type max access lifetime
      */
@@ -58,7 +54,6 @@ class Module extends \yii\base\Module
      * @var whether to use JWT tokens
      */
     public $useJwtToken = false;//ADDED
-    
     /**
      * @inheritdoc
      */
@@ -67,10 +62,9 @@ class Module extends \yii\base\Module
         parent::init();
         $this->registerTranslations();
     }
-    
     /**
      * Gets Oauth2 Server
-     * 
+     *
      * @return \filsh\yii2\oauth2server\Server
      * @throws \yii\base\InvalidConfigException
      */
@@ -78,11 +72,10 @@ class Module extends \yii\base\Module
     {
         if(!$this->has('server')) {
             $storages = [];
-            
             if($this->useJwtToken)
             {
                 if(!array_key_exists('access_token', $this->storageMap) || !array_key_exists('public_key', $this->storageMap)) {
-                        throw new \yii\base\InvalidConfigException('access_token and public_key must be set or set useJwtToken to false');
+                    throw new \yii\base\InvalidConfigException('access_token and public_key must be set or set useJwtToken to false');
                 }
                 //define dependencies when JWT is used instead of normal token
                 \Yii::$container->clear('public_key'); //remove old definition
@@ -91,11 +84,9 @@ class Module extends \yii\base\Module
                 \Yii::$container->clear('access_token'); //remove old definition
                 \Yii::$container->set('access_token', $this->storageMap['access_token']);
             }
-            
             foreach(array_keys($this->storageMap) as $name) {
                 $storages[$name] = \Yii::$container->get($name);
             }
-            
             $grantTypes = [];
             foreach($this->grantTypes as $name => $options) {
                 if(!isset($storages[$name]) || empty($options['class'])) {
@@ -108,7 +99,6 @@ class Module extends \yii\base\Module
                 $instance = $reflection->newInstanceArgs($config);
                 $grantTypes[$name] = $instance;
             }
-            
             $server = \Yii::$container->get(Server::className(), [
                 $this,
                 $storages,
@@ -124,25 +114,23 @@ class Module extends \yii\base\Module
         }
         return $this->get('server');
     }
-    
     public function getRequest()
     {
-        if(!$this->has('request')) {
+        if(!ArrayHelper::keyExists('request', $this->getComponents())) {
             $this->set('request', Request::createFromGlobals());
         }
         return $this->get('request');
     }
-    
     public function getResponse()
     {
-        if(!$this->has('response')) {
+        if(!ArrayHelper::keyExists('request', $this->getComponents())) {
             $this->set('response', new Response());
         }
         return $this->get('response');
     }
     /**
      * Register translations for this module
-     * 
+     *
      * @return array
      */
     public function registerTranslations()
@@ -154,10 +142,9 @@ class Module extends \yii\base\Module
             ];
         }
     }
-    
     /**
      * Translate module message
-     * 
+     *
      * @param string $category
      * @param string $message
      * @param array $params
