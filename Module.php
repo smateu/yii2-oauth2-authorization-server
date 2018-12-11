@@ -3,9 +3,8 @@
 namespace filsh\yii2\oauth2server;
 
 use \Yii;
-use yii\i18n\PhpMessageSource;
-use  \array_key_exists;
 use yii\helpers\ArrayHelper;
+use yii\i18n\PhpMessageSource;
 
 /**
  * For example,
@@ -17,6 +16,7 @@ use yii\helpers\ArrayHelper;
  *     'tokenAccessLifetime' => 3600 * 24,
  *     'storageMap' => [
  *         'user_credentials' => 'common\models\User',
+ *         'refresh_token' => 'common\models\User',
  *     ],
  *     'grantTypes' => [
  *         'user_credentials' => [
@@ -55,11 +55,11 @@ class Module extends \yii\base\Module
     public $tokenParamName;
 
     /**
-     * @var type max access lifetime
+     * @var int type max access lifetime
      */
     public $tokenAccessLifetime;
     /**
-     * @var whether to use JWT tokens
+     * @var bool whether to use JWT tokens
      */
     public $useJwtToken = false;//ADDED
 
@@ -76,7 +76,9 @@ class Module extends \yii\base\Module
      * Gets Oauth2 Server
      *
      * @return \filsh\yii2\oauth2server\Server
+     * @throws \ReflectionException
      * @throws \yii\base\InvalidConfigException
+     * @throws \yii\di\NotInstantiableException
      */
     public function getServer()
     {
@@ -131,6 +133,7 @@ class Module extends \yii\base\Module
 
             $this->set('server', $server);
         }
+
         return $this->get('server');
     }
 

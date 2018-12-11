@@ -15,6 +15,15 @@
             "email": "imaliy.filsh@gmail.com"
         }
     ],
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ],
+    "require-dev": {
+        "roave/security-advisories": "dev-master"
+    },
     "require": {
         "yiisoft/yii2": "*",
         "bshaffer/oauth2-server-php": "~1.10.0"

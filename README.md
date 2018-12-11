@@ -14,13 +14,11 @@ add
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/cheeseq/yii2-oauth2-server.git"
+            "url": "https://github.com/miolae/yii2-oauth2-server.git"
         }
     ],
     "require": {
-
-      "filsh/yii2-oauth2-server": "dev-yii-2.0.13-fix",
-
+      "filsh/yii2-oauth2-server": "dev-master",
     }
 ```
 
@@ -37,7 +35,8 @@ To use this extension,  simply add the following code in your application config
             'tokenAccessLifetime' => 3600 * 24,
             'storageMap' => [
                 'user_credentials' => 'app\models\User',
-            ],
+                'refresh_token' => 'app\models\User',
+       ],
             'grantTypes' => [
                 'user_credentials' => [
                     'class' => 'OAuth2\GrantType\UserCredentials',
