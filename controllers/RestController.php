@@ -6,7 +6,7 @@ use Yii;
 use yii\helpers\ArrayHelper;
 use filsh\yii2\oauth2server\filters\ErrorToExceptionFilter;
 
-class DefaultController extends \yii\rest\Controller
+class RestController extends \yii\rest\Controller
 {
     /**
      * @inheritdoc
@@ -22,10 +22,7 @@ class DefaultController extends \yii\rest\Controller
     
     public function actionToken()
     {
-        $server = $this->module->getServer();
-        $request = $this->module->getRequest();
-        $response = $server->handleTokenRequest($request);
-        
+        $response = $this->module->getServer()->handleTokenRequest();
         return $response->getParameters();
     }
     

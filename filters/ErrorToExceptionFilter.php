@@ -5,9 +5,14 @@ namespace filsh\yii2\oauth2server\filters;
 use OAuth2\Response;
 use Yii;
 use yii\base\Controller;
+use filsh\yii2\oauth2server\Module;
+use filsh\yii2\oauth2server\exceptions\HttpException;
 
 class ErrorToExceptionFilter extends \yii\base\Behavior
 {
+    /**
+     * @inheritdoc
+     */
     public function events()
     {
         return [Controller::EVENT_AFTER_ACTION => 'afterAction'];
@@ -33,6 +38,7 @@ class ErrorToExceptionFilter extends \yii\base\Behavior
                     $response->getParameter('error_uri'));
             }
         }
+        return $message;
     }
 
     protected function getErrorMessage(Response $response)
