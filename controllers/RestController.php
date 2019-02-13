@@ -5,6 +5,7 @@ namespace filsh\yii2\oauth2server\controllers;
 use Yii;
 use yii\helpers\ArrayHelper;
 use filsh\yii2\oauth2server\filters\ErrorToExceptionFilter;
+use yii\filters\Cors;
 
 class RestController extends \yii\rest\Controller
 {
@@ -17,8 +18,19 @@ class RestController extends \yii\rest\Controller
             'exceptionFilter' => [
                 'class' => ErrorToExceptionFilter::className()
             ],
+             'corsFilter' => [
+                'class' => Cors::className() // some custom config inside the class
+            ],
         ]);
     }
+
+    public function actionOptions()
+    {
+
+        Yii::$app->getResponse()->getHeaders()->set('Allow', implode(', ', ['OPTIONS', 'POST']));
+
+    }
+
 
     public function actionToken()
     {
