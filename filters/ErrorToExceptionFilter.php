@@ -8,6 +8,10 @@ use yii\base\Controller;
 use filsh\yii2\oauth2server\Module;
 use filsh\yii2\oauth2server\exceptions\HttpException;
 
+/**
+ * Class ErrorToExceptionFilter
+ * @package filsh\yii2\oauth2server\filters
+ */
 class ErrorToExceptionFilter extends \yii\base\Behavior
 {
     /**
@@ -38,9 +42,13 @@ class ErrorToExceptionFilter extends \yii\base\Behavior
                     $response->getParameter('error_uri'));
             }
         }
-        return $message;
+        return $isValid;
     }
 
+    /**
+     * @param Response $response
+     * @return mixed
+     */
     protected function getErrorMessage(Response $response)
     {
         return $response->getParameter('error');

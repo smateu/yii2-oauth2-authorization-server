@@ -14,11 +14,11 @@ add
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/miolae/yii2-oauth2-server.git"
+            "url": "https://github.com/Synida/yii2-oauth2-server.git"
         }
     ],
     "require": {
-      "filsh/yii2-oauth2-server": "dev-master",
+      "filsh/yii2-oauth2-server": "~2.0",
     }
 ```
 
