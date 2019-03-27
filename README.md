@@ -18,7 +18,7 @@ add
         }
     ],
     "require": {
-      "filsh/yii2-oauth2-server": "~2.0",
+      "filsh/yii2-oauth2-server": "dev-master",
     }
 ```
 
