@@ -151,7 +151,7 @@ class Module extends \yii\base\Module
 
     public function getResponse()
     {
-        if(!ArrayHelper::keyExists('request', $this->getComponents())) {
+        if(!ArrayHelper::keyExists('response', $this->getComponents())) {
             $this->set('response', new Response());
         }
         return $this->get('response');
