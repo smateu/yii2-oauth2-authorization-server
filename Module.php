@@ -5,7 +5,7 @@ namespace filsh\yii2\oauth2server;
 use \Yii;
 use yii\i18n\PhpMessageSource;
 use  \array_key_exists;
-
+use yii\helpers\ArrayHelper;
 /**
  * For example,
  * 
@@ -90,7 +90,7 @@ class Module extends \yii\base\Module
             if($this->useJwtToken)
             {
                 if(!array_key_exists('access_token', $this->storageMap) || !array_key_exists('public_key', $this->storageMap)) {
-                        throw new \yii\base\InvalidConfigException('access_token and public_key must be set or set useJwtToken to false');
+                    throw new \yii\base\InvalidConfigException('access_token and public_key must be set or set useJwtToken to false');
                 }
                 //define dependencies when JWT is used instead of normal token
                 \Yii::$container->clear('public_key'); //remove old definition
@@ -140,7 +140,7 @@ class Module extends \yii\base\Module
     
     public function getRequest()
     {
-        if(!$this->has('request')) {
+        if(!ArrayHelper::keyExists('request', $this->getComponents())) {
             $this->set('request', Request::createFromGlobals());
         }
         return $this->get('request');
@@ -148,7 +148,7 @@ class Module extends \yii\base\Module
     
     public function getResponse()
     {
-        if(!$this->has('response')) {
+        if(!ArrayHelper::keyExists('request', $this->getComponents())) {
             $this->set('response', new Response());
         }
         return $this->get('response');

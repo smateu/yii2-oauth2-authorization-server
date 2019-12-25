@@ -194,7 +194,6 @@ add url rule to urlManager
 
 ```php
 'urlManager' => [
-    'enablePrettyUrl' => true, //only if you want to use petty URLs
     'rules' => [
         'POST oauth2/<action:\w+>' => 'oauth2/rest/<action>',
         ...
