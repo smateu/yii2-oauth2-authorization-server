@@ -7,22 +7,13 @@ use yii\base\Controller;
 use filsh\yii2\oauth2server\Module;
 use filsh\yii2\oauth2server\exceptions\HttpException;
 
-class ErrorToExceptionFilter extends \yii\base\Behavior
+class ErrorToExceptionFilter extends \yii\base\ActionFilter
 {
     /**
      * @inheritdoc
-     */
-    public function events()
-    {
-        return [Controller::EVENT_AFTER_ACTION => 'afterAction'];
-    }
-
-    /**
-     * @param ActionEvent $event
-     * @return boolean
      * @throws HttpException when the request method is not allowed.
      */
-    public function afterAction($event)
+    public function afterAction($action, $result)
     {
         $response = Module::getInstance()->getServer()->getResponse();
 
