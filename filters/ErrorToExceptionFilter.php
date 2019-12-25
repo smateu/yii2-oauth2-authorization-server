@@ -16,6 +16,12 @@ class ErrorToExceptionFilter extends \yii\base\ActionFilter
     public function afterAction($action, $result)
     {
         $response = Module::getInstance()->getServer()->getResponse();
+        $headers = $response->getHttpHeaders();
+        if (!empty($headers)) {
+            foreach ($headers as $k => $v) {
+                Yii::$app->response->headers[$k] = $v;
+            }
+        }
 
         $isValid = true;
         if($response !== null) {
