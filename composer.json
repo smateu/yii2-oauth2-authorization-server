@@ -1,8 +1,8 @@
 {
-    "name": "filsh/yii2-oauth2-server",
-    "description": "OAuth2 Server for PHP",
+    "name": "pinfirestudios/yii2-oauth2-authorization-server",
+    "description": "OAuth2 Authorization Server for Yii2.  Fork of abandoned filsh/yii2-oauth2-server package",
     "keywords": ["yii", "extension", "module", "oauth", "oauth2"],
-    "homepage": "https://github.com/filsh/yii2-oauth2-server",
+    "homepage": "https://github.com/pinfirestudios/yii2-oauth2-authorization-server",
     "type": "yii2-extension",
     "license": "MIT",
     "support": {
