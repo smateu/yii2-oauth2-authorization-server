@@ -3,12 +3,12 @@
 namespace filsh\yii2\oauth2server;
 
 use \Yii;
-use yii\i18n\PhpMessageSource;
-use  \array_key_exists;
 use yii\helpers\ArrayHelper;
+use yii\i18n\PhpMessageSource;
+
 /**
  * For example,
- * 
+ *
  * ```php
  * 'oauth2' => [
  *     'class' => 'filsh\yii2\oauth2server\Module',
@@ -16,6 +16,7 @@ use yii\helpers\ArrayHelper;
  *     'tokenAccessLifetime' => 3600 * 24,
  *     'storageMap' => [
  *         'user_credentials' => 'common\models\User',
+ *         'refresh_token' => 'common\models\User',
  *     ],
  *     'grantTypes' => [
  *         'user_credentials' => [
@@ -32,22 +33,22 @@ use yii\helpers\ArrayHelper;
 class Module extends \yii\base\Module
 {
     const VERSION = '2.0.0';
-    
+
     /**
      * @var array Model's map
      */
     public $modelMap = [];
-    
+
     /**
      * @var array Storage's map
      */
     public $storageMap = [];
-    
+
     /**
      * @var array GrantTypes collection
      */
     public $grantTypes = [];
-    
+
     /**
      * @var array server options
      */
@@ -57,16 +58,15 @@ class Module extends \yii\base\Module
      * @var string name of access token parameter
      */
     public $tokenParamName;
-    
+
     /**
-     * @var type max access lifetime
+     * @var int type max access lifetime
      */
     public $tokenAccessLifetime;
     /**
-     * @var whether to use JWT tokens
+     * @var bool whether to use JWT tokens
      */
     public $useJwtToken = false;//ADDED
-    
     /**
      * @inheritdoc
      */
@@ -75,18 +75,20 @@ class Module extends \yii\base\Module
         parent::init();
         $this->registerTranslations();
     }
-    
+
     /**
      * Gets Oauth2 Server
-     * 
+     *
      * @return \filsh\yii2\oauth2server\Server
+     * @throws \ReflectionException
      * @throws \yii\base\InvalidConfigException
+     * @throws \yii\di\NotInstantiableException
      */
     public function getServer()
     {
         if(!$this->has('server')) {
             $storages = [];
-            
+
             if($this->useJwtToken)
             {
                 if(!array_key_exists('access_token', $this->storageMap) || !array_key_exists('public_key', $this->storageMap)) {
@@ -100,11 +102,11 @@ class Module extends \yii\base\Module
                 \Yii::$container->clear('access_token'); //remove old definition
                 \Yii::$container->set('access_token', $this->storageMap['access_token']);
             }
-            
+
             foreach(array_keys($this->storageMap) as $name) {
                 $storages[$name] = \Yii::$container->get($name);
             }
-            
+
             $grantTypes = [];
             foreach($this->grantTypes as $name => $options) {
                 if(!isset($storages[$name]) || empty($options['class'])) {
@@ -120,7 +122,7 @@ class Module extends \yii\base\Module
                 $instance = $reflection->newInstanceArgs($config);
                 $grantTypes[$name] = $instance;
             }
-            
+
             $server = \Yii::$container->get(Server::className(), [
                 $this,
                 $storages,
@@ -135,9 +137,10 @@ class Module extends \yii\base\Module
 
             $this->set('server', $server);
         }
+
         return $this->get('server');
     }
-    
+
     public function getRequest()
     {
         if(!ArrayHelper::keyExists('request', $this->getComponents())) {
@@ -145,7 +148,7 @@ class Module extends \yii\base\Module
         }
         return $this->get('request');
     }
-    
+
     public function getResponse()
     {
         if(!ArrayHelper::keyExists('request', $this->getComponents())) {
@@ -156,7 +159,7 @@ class Module extends \yii\base\Module
 
     /**
      * Register translations for this module
-     * 
+     *
      * @return array
      */
     public function registerTranslations()
@@ -168,10 +171,10 @@ class Module extends \yii\base\Module
             ];
         }
     }
-    
+
     /**
      * Translate module message
-     * 
+     *
      * @param string $category
      * @param string $message
      * @param array $params
