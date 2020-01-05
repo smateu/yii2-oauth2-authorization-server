@@ -16,6 +16,7 @@ class ErrorToExceptionFilter extends \yii\base\ActionFilter
     public function afterAction($action, $result)
     {
         $response = Module::getInstance()->getServer()->getResponse();
+
         $headers = $response->getHttpHeaders();
         if (!empty($headers)) {
             foreach ($headers as $k => $v) {
@@ -30,6 +31,8 @@ class ErrorToExceptionFilter extends \yii\base\ActionFilter
         if(!$isValid) {
             throw new HttpException($response->getStatusCode(), $this->getErrorMessage($response), $response->getParameter('error_uri'));
         }
+
+        return $result;
     }
     
     protected function getErrorMessage(\OAuth2\Response $response)
